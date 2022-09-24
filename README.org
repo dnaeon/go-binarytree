@@ -1,0 +1,27 @@
+* go-binarytree
+
+A simple implementation of [[https://en.wikipedia.org/wiki/Binary_tree][Binary Trees]] in Go.
+
+** Installation
+
+Install =go-binarytree= by executing the following command.
+
+#+begin_src shell
+  go get -v gopkg.in/dnaeon/go-binarytree.v1
+#+end_src
+
+** Usage
+
+See the included [[file:binarytree_test.go][test cases]] for some examples.
+
+** Tests
+
+Run the tests.
+
+#+begin_src shell
+  make test
+#+end_src
+
+** License
+
+=go-binarytree= is Open Source and licensed under the [[http://opensource.org/licenses/BSD-2-Clause][BSD License]].
