@@ -128,3 +128,46 @@ func TestSkipNodeHandlers(t *testing.T) {
                 t.Fatalf("want in-order values %v, got %v", wantValues, values)
         }
 }
+
+func TestFindNode(t *testing.T) {
+        // Construct the following simple binary tree
+        //
+        //     __1
+        //    /   \
+        //   2     3
+        //  / \
+        // 4   5
+        //
+        root := binarytree.NewNode(1)
+        two := root.InsertLeft(2)
+        root.InsertRight(3)
+        two.InsertLeft(4)
+        two.InsertRight(5)
+
+        goodPredicate := func(n *binarytree.Node[int]) bool {
+                if n.Value == 2 {
+                        return true
+                }
+                return false
+        }
+
+        node, ok := root.FindNode(goodPredicate)
+        if !ok {
+                t.Fatal("unable to find node (2)")
+        }
+
+        // The node we are looking for should have left and right
+        // children
+        if node.Left == nil || node.Right == nil {
+                t.Fatal("node (2) does not have left or right children")
+        }
+
+        // No node will match is supposed to match with this predicate
+        badPredicate := func(n *binarytree.Node[int]) bool {
+                return false
+        }
+
+        if _, ok := root.FindNode(badPredicate); ok {
+                t.Fatal("no node is supposed to match the predicate")
+        }
+}

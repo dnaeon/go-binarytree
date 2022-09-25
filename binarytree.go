@@ -36,6 +36,12 @@ type WalkFunc[T any] func(node *Node[T]) error
 // being visited node should be skipped.
 type SkipNodeFunc[T any] func(node *Node[T]) bool
 
+// FindFunc is the type of the function predicate which will be
+// invoked for each node while looking for a given node. The function
+// should return true, if the node is the one we are looking for,
+// false otherwise.
+type FindFunc[T any] func(node *Node[T]) bool
+
 // Node represents a node from a binary tree
 type Node[T any] struct {
         // Value is the value of the node
@@ -260,4 +266,31 @@ func (n *Node[T]) shouldSkipNode(node *Node[T]) bool {
         }
 
         return false
+}
+
+// Find looks for a node in the tree, which satisfies the given
+// predicate.
+func (n *Node[T]) FindNode(predicate FindFunc[T]) (*Node[T], bool) {
+        stack := deque.New[*Node[T]]()
+        stack.PushFront(n)
+
+        for !stack.IsEmpty() {
+                node, err := stack.PopFront()
+                if err != nil {
+                        panic(err)
+                }
+
+                if predicate(node) {
+                        return node, true
+                }
+
+                if node.Right != nil {
+                        stack.PushFront(node.Right)
+                }
+                if node.Left != nil {
+                        stack.PushFront(node.Left)
+                }
+        }
+
+        return nil, false
 }
