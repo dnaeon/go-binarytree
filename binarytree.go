@@ -169,3 +169,47 @@ func (n *Node[T]) Size() int {
 
         return size
 }
+
+type nodeHeight[T any] struct {
+        node   *Node[T]
+        height int
+}
+
+// Height returns the height of the tree
+func (n *Node[T]) Height() int {
+        max_height := 0
+        root := &nodeHeight[T]{
+                node:   n,
+                height: 0,
+        }
+        stack := deque.New[*nodeHeight[T]]()
+        stack.PushFront(root)
+
+        for !stack.IsEmpty() {
+                item, err := stack.PopFront()
+                if err != nil {
+                        panic(err)
+                }
+
+                if item.height > max_height {
+                        max_height = item.height
+                }
+
+                if item.node.Right != nil {
+                        right := &nodeHeight[T]{
+                                node:   item.node.Right,
+                                height: item.height + 1,
+                        }
+                        stack.PushFront(right)
+                }
+                if item.node.Left != nil {
+                        left := &nodeHeight[T]{
+                                node:   item.node.Left,
+                                height: item.height + 1,
+                        }
+                        stack.PushFront(left)
+                }
+        }
+
+        return max_height
+}
