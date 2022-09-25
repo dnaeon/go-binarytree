@@ -28,11 +28,26 @@ import (
         deque "gopkg.in/dnaeon/go-deque.v1"
 )
 
+// WalkFunc is the type of the function which will be invoked while
+// visiting a node from the binary tree.
+type WalkFunc[T any] func(node *Node[T]) error
+
+// SkipNodeFunc is a function which returns true, if the currently
+// being visited node should be skipped.
+type SkipNodeFunc[T any] func(node *Node[T]) bool
+
 // Node represents a node from a binary tree
 type Node[T any] struct {
+        // Value is the value of the node
         Value T
-        Left  *Node[T]
+        // Left child of the node
+        Left *Node[T]
+        // Right child of the node
         Right *Node[T]
+
+        // A list of function handlers, which specify whether a node
+        // should be skipped or not during tree walking.
+        skipNodeFuncs []SkipNodeFunc[T]
 }
 
 // NewNode creates a new node
@@ -62,10 +77,6 @@ func (n *Node[T]) InsertRight(value T) *Node[T] {
         return right
 }
 
-// WalkFunc is the type of the function which will be invoked while
-// visiting a node from the binary tree.
-type WalkFunc[T any] func(node *Node[T]) error
-
 // WalkInOrder performs an iterative In-order walking of the binary
 // tree - Left-Node-Right (LNR)
 func (n *Node[T]) WalkInOrder(walkFunc WalkFunc[T]) error {
@@ -74,6 +85,10 @@ func (n *Node[T]) WalkInOrder(walkFunc WalkFunc[T]) error {
 
         for node != nil || !stack.IsEmpty() {
                 for node != nil {
+                        if n.shouldSkipNode(node) {
+                                node = nil
+                                break
+                        }
                         stack.PushFront(node)
                         node = node.Left
                 }
@@ -107,6 +122,10 @@ func (n *Node[T]) WalkPreOrder(walkFunc WalkFunc[T]) error {
                         panic(err)
                 }
 
+                if n.shouldSkipNode(node) {
+                        continue
+                }
+
                 if err := walkFunc(node); err != nil {
                         return err
                 }
@@ -135,6 +154,11 @@ func (n *Node[T]) WalkPostOrder(walkFunc WalkFunc[T]) error {
                 if err != nil {
                         panic(err)
                 }
+
+                if n.shouldSkipNode(node) {
+                        continue
+                }
+
                 if node.Left != nil {
                         stack.PushFront(node.Left)
                 }
@@ -217,4 +241,23 @@ func (n *Node[T]) Height() int {
 // IsLeaf returns true, if the node is a leaf, false otherwise.
 func (n *Node[T]) IsLeaf() bool {
         return n.Left == nil && n.Right == nil
+}
+
+// AddSkipNodeFunc adds a new handler for determining whether a
+// node from the tree should be skipped while traversing it.
+func (n *Node[T]) AddSkipNodeFunc(handler SkipNodeFunc[T]) {
+        n.skipNodeFuncs = append(n.skipNodeFuncs, handler)
+}
+
+// shouldSkipNode applies the list of SkipNodeFunc handlers in
+// order to determine whether a node should be skipped while walking
+// the tree.
+func (n *Node[T]) shouldSkipNode(node *Node[T]) bool {
+        for _, handler := range n.skipNodeFuncs {
+                if handler(node) {
+                        return true
+                }
+        }
+
+        return false
 }

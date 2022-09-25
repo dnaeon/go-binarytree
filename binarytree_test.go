@@ -87,3 +87,44 @@ func TestBinaryTree(t *testing.T) {
                 t.Fatalf("want post-order values %v, got %v", wantPostOrderValues, postOrderValues)
         }
 }
+
+func TestSkipNodeHandlers(t *testing.T) {
+        // Construct the following simple binary tree
+        //
+        //     __1
+        //    /   \
+        //   2     3
+        //  / \
+        // 4   5
+        //
+        root := binarytree.NewNode(1)
+        two := root.InsertLeft(2)
+        root.InsertRight(3)
+        two.InsertLeft(4)
+        two.InsertRight(5)
+
+        skipFunc := func(n *binarytree.Node[int]) bool {
+                // Skip the sub-tree at node (2)
+                if n.Value == 2 {
+                        return true
+                }
+
+                return false
+        }
+
+        values := make([]int, 0)
+        walkFunc := func(n *binarytree.Node[int]) error {
+                values = append(values, n.Value)
+                return nil
+        }
+
+        root.AddSkipNodeFunc(skipFunc)
+        if err := root.WalkInOrder(walkFunc); err != nil {
+                t.Fatal(err)
+        }
+
+        wantValues := []int{1, 3}
+        if !reflect.DeepEqual(values, wantValues) {
+                t.Fatalf("want in-order values %v, got %v", wantValues, values)
+        }
+}
