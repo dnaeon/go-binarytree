@@ -321,3 +321,32 @@ func (n *Node[T]) IsFull() bool {
 
         return true
 }
+
+// IsDegenerate returns true, if each parent has only one child node.
+func (n *Node[T]) IsDegenerate() bool {
+        stack := deque.New[*Node[T]]()
+        stack.PushFront(n)
+
+        for !stack.IsEmpty() {
+                node, err := stack.PopFront()
+                if err != nil {
+                        panic(err)
+                }
+                if node.IsLeaf() {
+                        continue
+                }
+                both := node.Left != nil && node.Right != nil
+                if both {
+                        return false
+                }
+
+                if node.Left != nil {
+                        stack.PushFront(node.Left)
+                }
+                if node.Right != nil {
+                        stack.PushFront(node.Right)
+                }
+        }
+
+        return true
+}

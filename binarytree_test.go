@@ -209,3 +209,43 @@ func TestIsNotFullTree(t *testing.T) {
                 t.Fatal("tree should not be full")
         }
 }
+
+func TestTreeIsDegenerate(t *testing.T) {
+        // Our test tree
+        //
+        //     1
+        //    /
+        //   2
+        //    \
+        //     3
+        //    /
+        //   4
+        //
+        root := binarytree.NewNode(1)
+        two := root.InsertLeft(2)
+        three := two.InsertRight(3)
+        three.InsertLeft(4)
+
+        if !root.IsDegenerate() {
+                t.Fatal("tree should be degenerate")
+        }
+}
+
+func TestTreeIsNotDegenerate(t *testing.T) {
+        // Our test tree
+        //
+        //     __1
+        //    /
+        //   2
+        //  / \
+        // 4   5
+        //
+        root := binarytree.NewNode(1)
+        two := root.InsertLeft(2)
+        two.InsertLeft(4)
+        two.InsertRight(5)
+
+        if root.IsDegenerate() {
+                t.Fatal("tree should not be degenerate")
+        }
+}
