@@ -22,6 +22,10 @@ func TestBinaryTree(t *testing.T) {
         two.InsertLeft(4)
         two.InsertRight(5)
 
+        if root.Size() != 5 {
+                t.Fatal("expected tree size should be 5")
+        }
+
         collectorFunc := func(values *[]int) binarytree.WalkFunc[int] {
                 walkFunc := func(node *binarytree.Node[int]) error {
                         *values = append(*values, node.Value)

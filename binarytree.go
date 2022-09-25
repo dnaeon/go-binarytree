@@ -157,3 +157,15 @@ func (n *Node[T]) WalkPostOrder(walkFunc WalkFunc[T]) error {
 
         return nil
 }
+
+// Size returns the size of the tree
+func (n *Node[T]) Size() int {
+        size := 0
+        walkFunc := func(n *Node[T]) error {
+                size++
+                return nil
+        }
+        n.WalkInOrder(walkFunc)
+
+        return size
+}
