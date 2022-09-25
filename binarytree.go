@@ -83,7 +83,11 @@ func (n *Node[T]) WalkInOrder(walkFunc WalkFunc[T]) error {
                         if err != nil {
                                 panic(err)
                         }
-                        walkFunc(item)
+
+                        if err := walkFunc(item); err != nil {
+                                return err
+                        }
+
                         node = item.Right
                 }
         }
@@ -103,7 +107,9 @@ func (n *Node[T]) WalkPreOrder(walkFunc WalkFunc[T]) error {
                         panic(err)
                 }
 
-                walkFunc(node)
+                if err := walkFunc(node); err != nil {
+                        return err
+                }
 
                 if node.Right != nil {
                         stack.PushFront(node.Right)
@@ -144,7 +150,9 @@ func (n *Node[T]) WalkPostOrder(walkFunc WalkFunc[T]) error {
                 if err != nil {
                         return err
                 }
-                walkFunc(node)
+                if err := walkFunc(node); err != nil {
+                        return err
+                }
         }
 
         return nil
