@@ -171,3 +171,41 @@ func TestFindNode(t *testing.T) {
                 t.Fatal("no node is supposed to match the predicate")
         }
 }
+
+func TestIsFullTree(t *testing.T) {
+        // Our test tree
+        //
+        //     __1
+        //    /   \
+        //   2     3
+        //  / \
+        // 4   5
+        root := binarytree.NewNode(1)
+        two := root.InsertLeft(2)
+        root.InsertRight(3)
+        two.InsertLeft(4)
+        two.InsertRight(5)
+
+        if !root.IsFull() {
+                t.Fatal("tree should be full")
+        }
+}
+
+func TestIsNotFullTree(t *testing.T) {
+        // Our test tree
+        //
+        //     __1
+        //    /
+        //   2
+        //  / \
+        // 4   5
+        //
+        root := binarytree.NewNode(1)
+        two := root.InsertLeft(2)
+        two.InsertLeft(4)
+        two.InsertRight(5)
+
+        if root.IsFull() {
+                t.Fatal("tree should not be full")
+        }
+}

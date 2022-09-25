@@ -294,3 +294,30 @@ func (n *Node[T]) FindNode(predicate FindFunc[T]) (*Node[T], bool) {
 
         return nil, false
 }
+
+// IsFull returns true, if the binary tree is full. A full binary tree
+// is a tree in which every node has either 0 or 2 children.
+func (n *Node[T]) IsFull() bool {
+        stack := deque.New[*Node[T]]()
+        stack.PushFront(n)
+
+        for !stack.IsEmpty() {
+                node, err := stack.PopFront()
+                if err != nil {
+                        panic(err)
+                }
+                if node.IsLeaf() {
+                        continue
+                }
+
+                both := node.Left != nil && node.Right != nil
+                if !both {
+                        return false
+                }
+
+                stack.PushFront(node.Right)
+                stack.PushFront(node.Left)
+        }
+
+        return true
+}
