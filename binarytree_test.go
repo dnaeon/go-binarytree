@@ -38,6 +38,14 @@ func TestBinaryTree(t *testing.T) {
                 t.Fatal("expected height from node (5) should be 0")
         }
 
+        if root.IsLeaf() {
+                t.Fatal("root node should not be a leaf")
+        }
+
+        if !five.IsLeaf() {
+                t.Fatal("node (5) should be a leaf")
+        }
+
         collectorFunc := func(values *[]int) binarytree.WalkFunc[int] {
                 walkFunc := func(node *binarytree.Node[int]) error {
                         *values = append(*values, node.Value)

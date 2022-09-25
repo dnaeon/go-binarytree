@@ -213,3 +213,8 @@ func (n *Node[T]) Height() int {
 
         return max_height
 }
+
+// IsLeaf returns true, if the node is a leaf, false otherwise.
+func (n *Node[T]) IsLeaf() bool {
+        return n.Left == nil && n.Right == nil
+}
