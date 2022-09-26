@@ -41,7 +41,7 @@ func TestHeightAndSize(t *testing.T) {
 	}
 }
 
-func TestIsLeaf(t *testing.T) {
+func TestIsLeafNode(t *testing.T) {
 	// Our test tree
 	//
 	//     __1
@@ -56,23 +56,23 @@ func TestIsLeaf(t *testing.T) {
 	four := two.InsertLeft(4)
 	five := two.InsertRight(5)
 
-	if root.IsLeaf() {
+	if root.IsLeafNode() {
 		t.Fatal("root node should not be a leaf")
 	}
 
-	if two.IsLeaf() {
+	if two.IsLeafNode() {
 		t.Fatal("node (2) should not be a leaf")
 	}
 
-	if !three.IsLeaf() {
+	if !three.IsLeafNode() {
 		t.Fatal("node (3) should be a leaf")
 	}
 
-	if !four.IsLeaf() {
+	if !four.IsLeafNode() {
 		t.Fatal("node (4) should not be a leaf")
 	}
 
-	if !five.IsLeaf() {
+	if !five.IsLeafNode() {
 		t.Fatal("node (5) should be a leaf")
 	}
 }

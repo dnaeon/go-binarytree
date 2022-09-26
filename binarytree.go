@@ -287,8 +287,8 @@ func (n *Node[T]) Height() int {
 	return max_height
 }
 
-// IsLeaf returns true, if the node is a leaf, false otherwise.
-func (n *Node[T]) IsLeaf() bool {
+// IsLeafNode returns true, if the node is a leaf, false otherwise.
+func (n *Node[T]) IsLeafNode() bool {
 	return n.Left == nil && n.Right == nil
 }
 
@@ -349,7 +349,7 @@ func (n *Node[T]) IsFullTree() bool {
 		if err != nil {
 			panic(err)
 		}
-		if node.IsLeaf() {
+		if node.IsLeafNode() {
 			continue
 		}
 
@@ -375,7 +375,7 @@ func (n *Node[T]) IsDegenerateTree() bool {
 		if err != nil {
 			panic(err)
 		}
-		if node.IsLeaf() {
+		if node.IsLeafNode() {
 			continue
 		}
 		both := node.Left != nil && node.Right != nil
