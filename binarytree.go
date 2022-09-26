@@ -200,6 +200,37 @@ func (n *Node[T]) WalkPostOrder(walkFunc WalkFunc[T]) error {
 	return nil
 }
 
+// WalkLevelOrder performs an iterative Level-order (Breadth-first)
+// walking of the binary tree.
+func (n *Node[T]) WalkLevelOrder(walkFunc WalkFunc[T]) error {
+	queue := deque.New[*Node[T]]()
+	queue.PushBack(n)
+
+	for !queue.IsEmpty() {
+		node, err := queue.PopFront()
+		if err != nil {
+			panic(err)
+		}
+
+		if n.shouldSkipNode(node) {
+			continue
+		}
+
+		if err := walkFunc(node); err != nil {
+			return err
+		}
+
+		if node.Left != nil {
+			queue.PushBack(node.Left)
+		}
+		if node.Right != nil {
+			queue.PushBack(node.Right)
+		}
+	}
+
+	return nil
+}
+
 // Size returns the size of the tree
 func (n *Node[T]) Size() int {
 	size := 0
