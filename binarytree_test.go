@@ -249,3 +249,87 @@ func TestTreeIsNotDegenerate(t *testing.T) {
                 t.Fatal("tree should not be degenerate")
         }
 }
+
+func TestIsBalanced(t *testing.T) {
+        // Unbalanced tree
+        //
+        //     1
+        //    /
+        //   2
+        //  /
+        // 3
+        //
+        unbalanced_root := binarytree.NewNode(1)
+        two := unbalanced_root.InsertLeft(2)
+        two.InsertLeft(3)
+
+        if unbalanced_root.IsBalanced() {
+                t.Fatal("tree should not be balanced")
+        }
+
+        // Another unbalanced tree
+        //
+        //         __1
+        //        /   \
+        //     __2     3
+        //    /   \
+        //   4     5
+        //  / \
+        // 6   7
+        unbalanced_root = binarytree.NewNode(1)
+        unbalanced_root.InsertRight(3)
+        two = unbalanced_root.InsertLeft(2)
+        two.InsertRight(5)
+        four := two.InsertLeft(4)
+        four.InsertLeft(6)
+        four.InsertRight(7)
+
+        if unbalanced_root.IsBalanced() {
+                t.Fatal("tree should not be balanced")
+        }
+
+        // A single root node is a balanced tree
+        leaf := binarytree.NewNode(1)
+        if !leaf.IsBalanced() {
+                t.Fatal("single leaf node should be balanced")
+        }
+
+        // Yet another unbalanced tree
+        //
+        //     __1
+        //    /
+        //   2
+        //  / \
+        // 4   5
+        //
+        unbalanced_root = binarytree.NewNode(1)
+        two = unbalanced_root.InsertLeft(2)
+        two.InsertLeft(4)
+        two.InsertRight(5)
+
+        if unbalanced_root.IsBalanced() {
+                t.Fatal("tree should not be balanced")
+        }
+
+        // The sub-tree with root node (2) is balanced
+        if !two.IsBalanced() {
+                t.Fatal("tree with root (2) should be balanced")
+        }
+
+        // A balanced tree
+        //
+        //   1__
+        //  /   \
+        // 2     3
+        //      / \
+        //     4   5
+        balanced_root := binarytree.NewNode(1)
+        balanced_root.InsertLeft(2)
+        three := balanced_root.InsertRight(3)
+        three.InsertLeft(4)
+        three.InsertRight(5)
+
+        if !balanced_root.IsBalanced() {
+                t.Fatal("tree should be balanced")
+        }
+}

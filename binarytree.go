@@ -350,3 +350,47 @@ func (n *Node[T]) IsDegenerate() bool {
 
         return true
 }
+
+// IsBalanced returns true, if the tree is balanced. A balanced tree
+// is such a tree, for which the height of the left and right
+// sub-trees of each node differ by no more than 1.
+func (n *Node[T]) IsBalanced() bool {
+        if n.Left == nil && n.Right == nil {
+                return true
+        }
+
+        stack := deque.New[*Node[T]]()
+        stack.PushFront(n)
+
+        for !stack.IsEmpty() {
+                node, err := stack.PopFront()
+                if err != nil {
+                        panic(err)
+                }
+
+                left_height := -1
+                if node.Left != nil {
+                        left_height = node.Left.Height()
+                        stack.PushFront(node.Left)
+                }
+
+                right_height := -1
+                if node.Right != nil {
+                        right_height = node.Right.Height()
+                        stack.PushFront(node.Right)
+                }
+
+                left_height += 1
+                right_height += 1
+                diff := left_height - right_height
+                if diff < 0 {
+                        diff = -diff
+                }
+
+                if diff > 1 {
+                        return false
+                }
+        }
+
+        return true
+}
