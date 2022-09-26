@@ -9,8 +9,8 @@ import (
 	"gopkg.in/dnaeon/go-binarytree.v1"
 )
 
-func TestBinaryTree(t *testing.T) {
-	// Construct the following simple binary tree
+func TestHeightAndSize(t *testing.T) {
+	// Our test tree
 	//
 	//     __1
 	//    /   \
@@ -39,54 +39,134 @@ func TestBinaryTree(t *testing.T) {
 	if five.Height() != 0 {
 		t.Fatal("expected height from node (5) should be 0")
 	}
+}
+
+func TestIsLeaf(t *testing.T) {
+	// Our test tree
+	//
+	//     __1
+	//    /   \
+	//   2     3
+	//  / \
+	// 4   5
+	//
+	root := binarytree.NewNode(1)
+	two := root.InsertLeft(2)
+	three := root.InsertRight(3)
+	four := two.InsertLeft(4)
+	five := two.InsertRight(5)
 
 	if root.IsLeaf() {
 		t.Fatal("root node should not be a leaf")
 	}
 
+	if two.IsLeaf() {
+		t.Fatal("node (2) should not be a leaf")
+	}
+
+	if !three.IsLeaf() {
+		t.Fatal("node (3) should be a leaf")
+	}
+
+	if !four.IsLeaf() {
+		t.Fatal("node (4) should not be a leaf")
+	}
+
 	if !five.IsLeaf() {
 		t.Fatal("node (5) should be a leaf")
 	}
+}
 
-	collectorFunc := func(values *[]int) binarytree.WalkFunc[int] {
-		walkFunc := func(node *binarytree.Node[int]) error {
-			*values = append(*values, node.Value)
-			return nil
-		}
+func TestWalkInOrder(t *testing.T) {
+	// Our test tree
+	//
+	//     __1
+	//    /   \
+	//   2     3
+	//  / \
+	// 4   5
+	//
+	root := binarytree.NewNode(1)
+	two := root.InsertLeft(2)
+	root.InsertRight(3)
+	two.InsertLeft(4)
+	two.InsertRight(5)
 
-		return walkFunc
+	result := make([]int, 0)
+	wantResult := []int{4, 2, 5, 1, 3}
+	walkFunc := func(node *binarytree.Node[int]) error {
+		result = append(result, node.Value)
+		return nil
 	}
 
-	inOrderValues := make([]int, 0)
-	preOrderValues := make([]int, 0)
-	postOrderValues := make([]int, 0)
-
-	wantInOrderValues := []int{4, 2, 5, 1, 3}
-	wantPreOrderValues := []int{1, 2, 4, 5, 3}
-	wantPostOrderValues := []int{4, 5, 2, 3, 1}
-
-	if err := root.WalkInOrder(collectorFunc(&inOrderValues)); err != nil {
+	if err := root.WalkInOrder(walkFunc); err != nil {
 		t.Fatal(err)
 	}
 
-	if err := root.WalkPreOrder(collectorFunc(&preOrderValues)); err != nil {
+	if !reflect.DeepEqual(result, wantResult) {
+		t.Fatalf("want in-order values %v, got %v", wantResult, result)
+	}
+}
+
+func TestWalkPreOrder(t *testing.T) {
+	// Our test tree
+	//
+	//     __1
+	//    /   \
+	//   2     3
+	//  / \
+	// 4   5
+	//
+	root := binarytree.NewNode(1)
+	two := root.InsertLeft(2)
+	root.InsertRight(3)
+	two.InsertLeft(4)
+	two.InsertRight(5)
+
+	result := make([]int, 0)
+	wantResult := []int{1, 2, 4, 5, 3}
+	walkFunc := func(node *binarytree.Node[int]) error {
+		result = append(result, node.Value)
+		return nil
+	}
+
+	if err := root.WalkPreOrder(walkFunc); err != nil {
 		t.Fatal(err)
 	}
 
-	if err := root.WalkPostOrder(collectorFunc(&postOrderValues)); err != nil {
+	if !reflect.DeepEqual(wantResult, result) {
+		t.Fatalf("want pre-order values %v, got %v", wantResult, result)
+	}
+}
+
+func TestWalkPostOrder(t *testing.T) {
+	// Our test tree
+	//
+	//     __1
+	//    /   \
+	//   2     3
+	//  / \
+	// 4   5
+	//
+	root := binarytree.NewNode(1)
+	two := root.InsertLeft(2)
+	root.InsertRight(3)
+	two.InsertLeft(4)
+	two.InsertRight(5)
+
+	result := make([]int, 0)
+	wantResult := []int{4, 5, 2, 3, 1}
+	walkFunc := func(node *binarytree.Node[int]) error {
+		result = append(result, node.Value)
+		return nil
+	}
+
+	if err := root.WalkPostOrder(walkFunc); err != nil {
 		t.Fatal(err)
 	}
 
-	if !reflect.DeepEqual(inOrderValues, wantInOrderValues) {
-		t.Fatalf("want in-order values %v, got %v", wantInOrderValues, inOrderValues)
-	}
-
-	if !reflect.DeepEqual(preOrderValues, wantPreOrderValues) {
-		t.Fatalf("want pre-order values %v, got %v", wantPreOrderValues, preOrderValues)
-	}
-
-	if !reflect.DeepEqual(postOrderValues, wantPostOrderValues) {
-		t.Fatalf("want post-order values %v, got %v", wantPostOrderValues, postOrderValues)
+	if !reflect.DeepEqual(wantResult, result) {
+		t.Fatalf("want post-order values %v, got %v", wantResult, result)
 	}
 }
 
