@@ -1,7 +1,9 @@
 package binarytree_test
 
 import (
+	"bytes"
 	"reflect"
+	"strings"
 	"testing"
 
 	"gopkg.in/dnaeon/go-binarytree.v1"
@@ -347,5 +349,38 @@ func TestNodeAttributes(t *testing.T) {
 	wantAttrs := "color=green fillcolor=green"
 	if root.GetDotAttributes() != wantAttrs {
 		t.Fatal("node attributes mismatch")
+	}
+}
+
+func TestWriteDot(t *testing.T) {
+	// Our test tree
+	//
+	//   1__
+	//  /   \
+	// 2     3
+	//      / \
+	//     4   5
+	root := binarytree.NewNode(1)
+	root.InsertLeft(2)
+	three := root.InsertRight(3)
+	three.InsertLeft(4)
+	three.InsertRight(5)
+
+	var buf bytes.Buffer
+	if err := root.WriteDot(&buf); err != nil {
+		t.Fatal(err)
+	}
+
+	output := buf.String()
+	if output == "" {
+		t.Fatal("got empty dot representation")
+	}
+
+	if !strings.HasPrefix(output, "digraph {") {
+		t.Fatal("missing dot prefix")
+	}
+
+	if !strings.HasSuffix(output, "}\n") {
+		t.Fatal("missing dot suffix")
 	}
 }
