@@ -25,6 +25,10 @@
 package binarytree
 
 import (
+        "fmt"
+        "io"
+        "strconv"
+
         deque "gopkg.in/dnaeon/go-deque.v1"
 )
 
@@ -393,4 +397,59 @@ func (n *Node[T]) IsBalanced() bool {
         }
 
         return true
+}
+
+// dotId returns the unique node id, which is used when generating the
+// binary tree representation in Dot.
+func (n *Node[T]) dotId() int64 {
+        addr := fmt.Sprintf("%p", n)
+        id, err := strconv.ParseInt(addr[2:], 16, 64)
+        if err != nil {
+                panic(err)
+        }
+
+        return id
+}
+
+// WriteDot generates the Dot representation of the binary tree.
+func (n *Node[T]) WriteDot(w io.Writer) error {
+        nodeAttrs := `[color=lightblue fillcolor=lightblue fontcolor=black shape=record style="filled, rounded"]`
+        if _, err := fmt.Fprintln(w, "digraph {"); err != nil {
+                return err
+        }
+
+        if _, err := fmt.Fprintf(w, "\tnode %s\n", nodeAttrs); err != nil {
+                return err
+        }
+
+        walkFunc := func(n *Node[T]) error {
+                nodeId := n.dotId()
+                if _, err := fmt.Fprintf(w, "\t%d [label=\"<l>|<v> %v|<r>\"]\n", nodeId, n.Value); err != nil {
+                        return err
+                }
+
+                if n.Left != nil {
+                        if _, err := fmt.Fprintf(w, "\t%d:l -> %d:v\n", nodeId, n.Left.dotId()); err != nil {
+                                return err
+                        }
+                }
+
+                if n.Right != nil {
+                        if _, err := fmt.Fprintf(w, "\t%d:r -> %d:v\n", nodeId, n.Right.dotId()); err != nil {
+                                return err
+                        }
+                }
+
+                return nil
+        }
+
+        if err := n.WalkPreOrder(walkFunc); err != nil {
+                return err
+        }
+
+        if _, err := fmt.Fprintln(w, "}"); err != nil {
+                return err
+        }
+
+        return nil
 }
