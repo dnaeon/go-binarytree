@@ -28,6 +28,7 @@ import (
         "fmt"
         "io"
         "strconv"
+        "strings"
 
         deque "gopkg.in/dnaeon/go-deque.v1"
 )
@@ -58,14 +59,21 @@ type Node[T any] struct {
         // A list of function handlers, which specify whether a node
         // should be skipped or not during tree walking.
         skipNodeFuncs []SkipNodeFunc[T]
+
+        // dotAttributes represents the list of attributes associated
+        // with the node, which will be used when generating the Dot
+        // representation of the tree.
+        dotAttributes map[string]string
 }
 
 // NewNode creates a new node
 func NewNode[T any](value T) *Node[T] {
         node := &Node[T]{
-                Value: value,
-                Left:  nil,
-                Right: nil,
+                Value:         value,
+                Left:          nil,
+                Right:         nil,
+                skipNodeFuncs: make([]SkipNodeFunc[T], 0),
+                dotAttributes: make(map[string]string),
         }
 
         return node
@@ -399,6 +407,23 @@ func (n *Node[T]) IsBalanced() bool {
         return true
 }
 
+// AddAttribute associates an attribute with the node, which will be
+// used when generating the Dot representation of the tree.
+func (n *Node[T]) AddAttribute(name, value string) {
+        n.dotAttributes[name] = value
+}
+
+// getDotAttributes returns the attributes associated with the node in
+// format suitable for using in the Dot representation.
+func (n *Node[T]) getDotAttributes() string {
+        attrs := ""
+        for k, v := range n.dotAttributes {
+                attrs += fmt.Sprintf("%s=%s ", k, v)
+        }
+
+        return strings.TrimRight(attrs, " ")
+}
+
 // dotId returns the unique node id, which is used when generating the
 // binary tree representation in Dot.
 func (n *Node[T]) dotId() int64 {
@@ -424,7 +449,8 @@ func (n *Node[T]) WriteDot(w io.Writer) error {
 
         walkFunc := func(n *Node[T]) error {
                 nodeId := n.dotId()
-                if _, err := fmt.Fprintf(w, "\t%d [label=\"<l>|<v> %v|<r>\"]\n", nodeId, n.Value); err != nil {
+                _, err := fmt.Fprintf(w, "\t%d [label=\"<l>|<v> %v|<r>\" %s]\n", nodeId, n.Value, n.getDotAttributes())
+                if err != nil {
                         return err
                 }
 
