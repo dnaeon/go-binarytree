@@ -333,3 +333,19 @@ func TestIsBalanced(t *testing.T) {
 		t.Fatal("tree should be balanced")
 	}
 }
+
+func TestNodeAttributes(t *testing.T) {
+	root := binarytree.NewNode(1)
+
+	if root.GetDotAttributes() != "" {
+		t.Fatal("node is expected to have no attributes")
+	}
+
+	root.AddAttribute("color", "green")
+	root.AddAttribute("fillcolor", "green")
+
+	wantAttrs := "color=green fillcolor=green"
+	if root.GetDotAttributes() != wantAttrs {
+		t.Fatal("node attributes mismatch")
+	}
+}
