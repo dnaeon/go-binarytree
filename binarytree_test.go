@@ -77,6 +77,42 @@ func TestIsLeafNode(t *testing.T) {
 	}
 }
 
+func TestIsFullNode(t *testing.T) {
+	// Our test tree
+	//
+	//     __1
+	//    /   \
+	//   2     3
+	//  / \
+	// 4   5
+	//
+	root := binarytree.NewNode(1)
+	two := root.InsertLeft(2)
+	three := root.InsertRight(3)
+	four := two.InsertLeft(4)
+	five := two.InsertRight(5)
+
+	if !root.IsFullNode() {
+		t.Fatal("root node should be full")
+	}
+
+	if !two.IsFullNode() {
+		t.Fatal("node (2) should be full")
+	}
+
+	if three.IsFullNode() {
+		t.Fatal("node (3) should not be full")
+	}
+
+	if four.IsFullNode() {
+		t.Fatal("node (4) should not be full")
+	}
+
+	if five.IsFullNode() {
+		t.Fatal("node (5) should not be full")
+	}
+}
+
 func TestWalkInOrder(t *testing.T) {
 	// Our test tree
 	//
