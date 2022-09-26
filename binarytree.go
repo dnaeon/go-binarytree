@@ -292,6 +292,12 @@ func (n *Node[T]) IsLeafNode() bool {
 	return n.Left == nil && n.Right == nil
 }
 
+// IsFullNode returns true, if the node contains left and right
+// children
+func (n *Node[T]) IsFullNode() bool {
+	return n.Left != nil && n.Right != nil
+}
+
 // AddSkipNodeFunc adds a new handler for determining whether a
 // node from the tree should be skipped while traversing it.
 func (n *Node[T]) AddSkipNodeFunc(handler SkipNodeFunc[T]) {
@@ -353,8 +359,7 @@ func (n *Node[T]) IsFullTree() bool {
 			continue
 		}
 
-		both := node.Left != nil && node.Right != nil
-		if !both {
+		if !node.IsFullNode() {
 			return false
 		}
 
@@ -378,8 +383,8 @@ func (n *Node[T]) IsDegenerateTree() bool {
 		if node.IsLeafNode() {
 			continue
 		}
-		both := node.Left != nil && node.Right != nil
-		if both {
+
+		if node.IsFullNode() {
 			return false
 		}
 
