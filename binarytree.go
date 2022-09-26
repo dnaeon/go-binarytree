@@ -413,9 +413,9 @@ func (n *Node[T]) AddAttribute(name, value string) {
 	n.dotAttributes[name] = value
 }
 
-// getDotAttributes returns the attributes associated with the node in
+// GetDotAttributes returns the attributes associated with the node in
 // format suitable for using in the Dot representation.
-func (n *Node[T]) getDotAttributes() string {
+func (n *Node[T]) GetDotAttributes() string {
 	attrs := ""
 	for k, v := range n.dotAttributes {
 		attrs += fmt.Sprintf("%s=%s ", k, v)
@@ -449,7 +449,7 @@ func (n *Node[T]) WriteDot(w io.Writer) error {
 
 	walkFunc := func(n *Node[T]) error {
 		nodeId := n.dotId()
-		_, err := fmt.Fprintf(w, "\t%d [label=\"<l>|<v> %v|<r>\" %s]\n", nodeId, n.Value, n.getDotAttributes())
+		_, err := fmt.Fprintf(w, "\t%d [label=\"<l>|<v> %v|<r>\" %s]\n", nodeId, n.Value, n.GetDotAttributes())
 		if err != nil {
 			return err
 		}
