@@ -1,0 +1,28 @@
+* go-deque
+
+A simple, generic, thread-safe implementation of [[https://en.wikipedia.org/wiki/Double-ended_queue][double-ended queue]] in
+Go.
+
+** Installation
+
+Install =go-deque= by executing the following command.
+
+#+begin_src shell
+  go get -v gopkg.in/dnaeon/go-deque.v1
+#+end_src
+
+** Usage
+
+See the included [[file:deque_test.go][test cases]] for some examples.
+
+** Tests
+
+Run the tests.
+
+#+begin_src shell
+  make test
+#+end_src
+
+** License
+
+=go-deque= is Open Source and licensed under the [[http://opensource.org/licenses/BSD-2-Clause][BSD License]].
