@@ -170,6 +170,37 @@ func TestWalkPostOrder(t *testing.T) {
 	}
 }
 
+func TestWalkLevelOrder(t *testing.T) {
+	// Our test tree
+	//
+	//     __1
+	//    /   \
+	//   2     3
+	//  / \
+	// 4   5
+	//
+	root := binarytree.NewNode(1)
+	two := root.InsertLeft(2)
+	root.InsertRight(3)
+	two.InsertLeft(4)
+	two.InsertRight(5)
+
+	result := make([]int, 0)
+	wantResult := []int{1, 2, 3, 4, 5}
+	walkFunc := func(node *binarytree.Node[int]) error {
+		result = append(result, node.Value)
+		return nil
+	}
+
+	if err := root.WalkLevelOrder(walkFunc); err != nil {
+		t.Fatal(err)
+	}
+
+	if !reflect.DeepEqual(wantResult, result) {
+		t.Fatalf("want level-order values %v, got %v", wantResult, result)
+	}
+}
+
 func TestSkipNodeHandlers(t *testing.T) {
 	// Construct the following simple binary tree
 	//
