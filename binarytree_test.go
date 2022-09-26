@@ -299,7 +299,7 @@ func TestIsFullTree(t *testing.T) {
 	two.InsertLeft(4)
 	two.InsertRight(5)
 
-	if !root.IsFull() {
+	if !root.IsFullTree() {
 		t.Fatal("tree should be full")
 	}
 }
@@ -318,12 +318,12 @@ func TestIsNotFullTree(t *testing.T) {
 	two.InsertLeft(4)
 	two.InsertRight(5)
 
-	if root.IsFull() {
+	if root.IsFullTree() {
 		t.Fatal("tree should not be full")
 	}
 }
 
-func TestTreeIsDegenerate(t *testing.T) {
+func TestTreeIsDegenerateTree(t *testing.T) {
 	// Our test tree
 	//
 	//     1
@@ -339,7 +339,7 @@ func TestTreeIsDegenerate(t *testing.T) {
 	three := two.InsertRight(3)
 	three.InsertLeft(4)
 
-	if !root.IsDegenerate() {
+	if !root.IsDegenerateTree() {
 		t.Fatal("tree should be degenerate")
 	}
 }
@@ -358,12 +358,12 @@ func TestTreeIsNotDegenerate(t *testing.T) {
 	two.InsertLeft(4)
 	two.InsertRight(5)
 
-	if root.IsDegenerate() {
+	if root.IsDegenerateTree() {
 		t.Fatal("tree should not be degenerate")
 	}
 }
 
-func TestIsBalanced(t *testing.T) {
+func TestIsBalancedTree(t *testing.T) {
 	// Unbalanced tree
 	//
 	//     1
@@ -376,7 +376,7 @@ func TestIsBalanced(t *testing.T) {
 	two := unbalanced_root.InsertLeft(2)
 	two.InsertLeft(3)
 
-	if unbalanced_root.IsBalanced() {
+	if unbalanced_root.IsBalancedTree() {
 		t.Fatal("tree should not be balanced")
 	}
 
@@ -397,13 +397,13 @@ func TestIsBalanced(t *testing.T) {
 	four.InsertLeft(6)
 	four.InsertRight(7)
 
-	if unbalanced_root.IsBalanced() {
+	if unbalanced_root.IsBalancedTree() {
 		t.Fatal("tree should not be balanced")
 	}
 
 	// A single root node is a balanced tree
 	leaf := binarytree.NewNode(1)
-	if !leaf.IsBalanced() {
+	if !leaf.IsBalancedTree() {
 		t.Fatal("single leaf node should be balanced")
 	}
 
@@ -420,12 +420,12 @@ func TestIsBalanced(t *testing.T) {
 	two.InsertLeft(4)
 	two.InsertRight(5)
 
-	if unbalanced_root.IsBalanced() {
+	if unbalanced_root.IsBalancedTree() {
 		t.Fatal("tree should not be balanced")
 	}
 
 	// The sub-tree with root node (2) is balanced
-	if !two.IsBalanced() {
+	if !two.IsBalancedTree() {
 		t.Fatal("tree with root (2) should be balanced")
 	}
 
@@ -442,7 +442,7 @@ func TestIsBalanced(t *testing.T) {
 	three.InsertLeft(4)
 	three.InsertRight(5)
 
-	if !balanced_root.IsBalanced() {
+	if !balanced_root.IsBalancedTree() {
 		t.Fatal("tree should be balanced")
 	}
 }

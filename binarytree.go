@@ -338,9 +338,9 @@ func (n *Node[T]) FindNode(predicate FindFunc[T]) (*Node[T], bool) {
 	return nil, false
 }
 
-// IsFull returns true, if the binary tree is full. A full binary tree
+// IsFullTree returns true, if the binary tree is full. A full binary tree
 // is a tree in which every node has either 0 or 2 children.
-func (n *Node[T]) IsFull() bool {
+func (n *Node[T]) IsFullTree() bool {
 	stack := deque.New[*Node[T]]()
 	stack.PushFront(n)
 
@@ -365,8 +365,8 @@ func (n *Node[T]) IsFull() bool {
 	return true
 }
 
-// IsDegenerate returns true, if each parent has only one child node.
-func (n *Node[T]) IsDegenerate() bool {
+// IsDegenerateTree returns true, if each parent has only one child node.
+func (n *Node[T]) IsDegenerateTree() bool {
 	stack := deque.New[*Node[T]]()
 	stack.PushFront(n)
 
@@ -394,10 +394,10 @@ func (n *Node[T]) IsDegenerate() bool {
 	return true
 }
 
-// IsBalanced returns true, if the tree is balanced. A balanced tree
+// IsBalancedTree returns true, if the tree is balanced. A balanced tree
 // is such a tree, for which the height of the left and right
 // sub-trees of each node differ by no more than 1.
-func (n *Node[T]) IsBalanced() bool {
+func (n *Node[T]) IsBalancedTree() bool {
 	if n.Left == nil && n.Right == nil {
 		return true
 	}
