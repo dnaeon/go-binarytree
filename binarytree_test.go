@@ -611,6 +611,117 @@ func TestIsCompleteTree(t *testing.T) {
 	}
 }
 
+func TestIsPerfectTree(t *testing.T) {
+	// A perfect binary tree
+	//
+	//    1
+	//   / \
+	//  2   3
+	//
+	root := binarytree.NewNode(1)
+	root.InsertLeft(2)
+	root.InsertRight(3)
+
+	if !root.IsPerfectTree() {
+		t.Fatal("tree should be perfect")
+	}
+
+	// A non-perfect binary tree
+	//
+	//      1
+	//     / \
+	//    2   3
+	//   /
+	//  4
+	//
+	root = binarytree.NewNode(1)
+	root.InsertRight(3)
+	two := root.InsertLeft(2)
+	two.InsertLeft(4)
+
+	if root.IsPerfectTree() {
+		t.Fatal("tree should not be perfect")
+	}
+
+	// A non-perfect binary tree
+	//
+	//     __1__
+	//    /     \
+	//   2       3
+	//  / \     /
+	// 4   5   6
+	//
+	root = binarytree.NewNode(1)
+	two = root.InsertLeft(2)
+	two.InsertLeft(4)
+	two.InsertRight(5)
+	three := root.InsertRight(3)
+	three.InsertLeft(6)
+
+	if root.IsPerfectTree() {
+		t.Fatal("tree should not be perfect")
+	}
+
+	// A perfect binary tree
+	//
+	//     __1__
+	//    /     \
+	//   2       3
+	//  / \     / \
+	// 4   5   6   7
+	//
+	root = binarytree.NewNode(1)
+	two = root.InsertLeft(2)
+	two.InsertLeft(4)
+	two.InsertRight(5)
+	three = root.InsertRight(3)
+	three.InsertLeft(6)
+	three.InsertRight(7)
+
+	if !root.IsPerfectTree() {
+		t.Fatal("tree should be perfect")
+	}
+
+	// A non-perfect binary tree
+	//
+	//     1
+	//    /
+	//   2
+	//  /
+	// 3
+	//
+	root = binarytree.NewNode(1)
+	two = root.InsertLeft(2)
+	two.InsertLeft(3)
+
+	if root.IsPerfectTree() {
+		t.Fatal("tree should not be perfect")
+	}
+
+	// A non-perfect binary tree
+	//
+	//   1__
+	//  /   \
+	// 2     3
+	//      / \
+	//     4   5
+	root = binarytree.NewNode(1)
+	root.InsertLeft(2)
+	three = root.InsertRight(3)
+	three.InsertLeft(4)
+	three.InsertRight(5)
+
+	if root.IsPerfectTree() {
+		t.Fatal("tree should not be perfect")
+	}
+
+	// A perfect binary tree with a single root node
+	root = binarytree.NewNode(1)
+	if !root.IsPerfectTree() {
+		t.Fatal("tree should be perfect")
+	}
+}
+
 func TestNodeAttributes(t *testing.T) {
 	root := binarytree.NewNode(1)
 
