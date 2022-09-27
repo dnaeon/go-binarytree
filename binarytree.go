@@ -485,6 +485,11 @@ func (n *Node[T]) IsCompleteTree() bool {
 	return true
 }
 
+// IsPerfectTree returns true, if the binary tree is full and complete
+func (n *Node[T]) IsPerfectTree() bool {
+	return n.IsFullTree() && n.IsCompleteTree()
+}
+
 // AddAttribute associates an attribute with the node, which will be
 // used when generating the Dot representation of the tree.
 func (n *Node[T]) AddAttribute(name, value string) {
