@@ -746,6 +746,113 @@ func TestIsPerfectTree(t *testing.T) {
 	}
 }
 
+func TestIsBinarySearchTree(t *testing.T) {
+	// A valid BST
+	//
+	//    2
+	//   / \
+	//  1   3
+	//
+	root := binarytree.NewNode(2)
+	root.InsertLeft(1)
+	root.InsertRight(3)
+
+	if !root.IsBinarySearchTree(binarytree.IntComparator) {
+		t.Fatal("tree should be BST")
+	}
+
+	// Invalid BST
+	//
+	//    1
+	//   / \
+	//  2   3
+	//
+	root = binarytree.NewNode(1)
+	root.InsertLeft(2)
+	root.InsertRight(3)
+
+	if root.IsBinarySearchTree(binarytree.IntComparator) {
+		t.Fatal("tree should not be BST")
+	}
+
+	// Invalid BST
+	//
+	//      1
+	//     / \
+	//    2   3
+	//   /
+	//  4
+	//
+	root = binarytree.NewNode(1)
+	root.InsertRight(3)
+	two := root.InsertLeft(2)
+	two.InsertLeft(4)
+
+	if root.IsBinarySearchTree(binarytree.IntComparator) {
+		t.Fatal("tree should not be BST")
+	}
+
+	// A valid BST
+	//
+	//     ______8
+	//    /       \
+	//   3__       10___
+	//  /   \           \
+	// 1     6          _14
+	//      / \        /
+	//     4   7      13
+	//
+	root = binarytree.NewNode(8)
+	three := root.InsertLeft(3)
+	three.InsertLeft(1)
+	six := three.InsertRight(6)
+	six.InsertLeft(4)
+	six.InsertRight(7)
+	ten := root.InsertRight(10)
+	fourteen := ten.InsertRight(14)
+	fourteen.InsertLeft(13)
+
+	if !root.IsBinarySearchTree(binarytree.IntComparator) {
+		t.Fatal("tree should be BST")
+	}
+
+	// A tree with a single root node is a valid BST
+	root = binarytree.NewNode(1)
+	if !root.IsBinarySearchTree(binarytree.IntComparator) {
+		t.Fatal("tree should be BST")
+	}
+
+	// A valid BST
+	//
+	//   B
+	//  / \
+	// A   C
+	//
+	str_root := binarytree.NewNode("B")
+	str_root.InsertLeft("A")
+	str_root.InsertRight("C")
+
+	if !str_root.IsBinarySearchTree(binarytree.StringComparator) {
+		t.Fatal("tree should be BST")
+	}
+
+	// Invalid BST
+	//
+	//     A
+	//    / \
+	//   B   C
+	//  /
+	// D
+	str_root = binarytree.NewNode("A")
+	str_root.InsertRight("C")
+	b := str_root.InsertLeft("B")
+	b.InsertLeft("D")
+
+	if str_root.IsBinarySearchTree(binarytree.StringComparator) {
+		t.Fatal("tree should not be BST")
+	}
+}
+
 func TestNodeAttributes(t *testing.T) {
 	root := binarytree.NewNode(1)
 
