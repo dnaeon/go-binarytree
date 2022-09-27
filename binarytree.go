@@ -60,6 +60,24 @@ type FindFunc[T any] func(node *Node[T]) bool
 // (BST).
 type ComparatorFunc[T any] func(a, b T) int
 
+// IntComparator is a comparator function for comparing integer node
+// values.
+func IntComparator(a, b int) int {
+	if a < b {
+		return -1
+	} else if a > b {
+		return 1
+	}
+
+	return 0
+}
+
+// StringComparator is a comparator function for comparing string node
+// values.
+func StringComparator(a, b string) int {
+	return strings.Compare(a, b)
+}
+
 // Node represents a node from a binary tree
 type Node[T any] struct {
 	// Value is the value of the node
