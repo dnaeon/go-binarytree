@@ -47,6 +47,18 @@ type SkipNodeFunc[T any] func(node *Node[T]) bool
 // false otherwise.
 type FindFunc[T any] func(node *Node[T]) bool
 
+// ComparatorFunc is a function which compares two values of type T.
+// The comparator function should return:
+//
+// - A negative integer when A is less than B
+// - A positive integer when A is greater than B
+// - Zero when A equals B
+//
+// The comparator function is used by IsBinarySearchTree method for
+// validating whether a given binary tree is a Binary Search Tree
+// (BST).
+type ComparatorFunc[T any] func(a, b T) int
+
 // Node represents a node from a binary tree
 type Node[T any] struct {
 	// Value is the value of the node
