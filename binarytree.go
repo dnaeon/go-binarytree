@@ -25,6 +25,7 @@
 package binarytree
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"strconv"
@@ -500,6 +501,40 @@ func (n *Node[T]) IsCompleteTree() bool {
 // IsPerfectTree returns true, if the binary tree is full and complete
 func (n *Node[T]) IsPerfectTree() bool {
 	return n.IsFullTree() && n.IsCompleteTree()
+}
+
+// errNotBst is returned by a walking function when a tree being
+// walked is detected to not be a BST.
+var errNotBst = errors.New("not a binary search tree")
+
+// IsBinarySearchTree returns true, if the tree is a Binary Search
+// Tree (BST).
+func (n *Node[T]) IsBinarySearchTree(comparator ComparatorFunc[T]) bool {
+	if n.IsLeafNode() {
+		return true
+	}
+
+	// Use errNotBst to signal a condition to stop walking the
+	// tree as soon as we know this is a not a BST.
+	var last *Node[T]
+	walkFunc := func(curr *Node[T]) error {
+		if last != nil && comparator(last.Value, curr.Value) > 0 {
+			return errNotBst
+		}
+		last = curr
+
+		return nil
+	}
+
+	err := n.WalkInOrder(walkFunc)
+	switch {
+	case err == errNotBst:
+		return false
+	case err != nil:
+		panic(err)
+	default:
+		return true
+	}
 }
 
 // AddAttribute associates an attribute with the node, which will be
