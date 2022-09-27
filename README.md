@@ -7,6 +7,8 @@
 
 A simple implementation of [Binary Trees](https://en.wikipedia.org/wiki/Binary_tree) in Go.
 
+![Example Binary Tree](./images/binarytree.svg)
+
 ## Installation
 
 Install `go-binarytree` by executing the following command.
