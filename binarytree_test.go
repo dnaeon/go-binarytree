@@ -483,6 +483,134 @@ func TestIsBalancedTree(t *testing.T) {
 	}
 }
 
+func TestIsCompleteTree(t *testing.T) {
+	// A complete binary tree
+	//
+	//    1
+	//   / \
+	//  2   3
+	//
+	root := binarytree.NewNode(1)
+	root.InsertLeft(2)
+	root.InsertRight(3)
+
+	if !root.IsCompleteTree() {
+		t.Fatal("tree should be complete")
+	}
+
+	// A complete binary tree
+	//
+	//      1
+	//     / \
+	//    2   3
+	//   /
+	//  4
+	//
+	root = binarytree.NewNode(1)
+	root.InsertRight(3)
+	two := root.InsertLeft(2)
+	two.InsertLeft(4)
+
+	if !root.IsCompleteTree() {
+		t.Fatal("tree should be complete")
+	}
+
+	// A complete binary tree
+	//
+	//     __1__
+	//    /     \
+	//   2       3
+	//  / \     /
+	// 4   5   6
+	//
+	root = binarytree.NewNode(1)
+	two = root.InsertLeft(2)
+	two.InsertLeft(4)
+	two.InsertRight(5)
+	three := root.InsertRight(3)
+	three.InsertLeft(6)
+
+	if !root.IsCompleteTree() {
+		t.Fatal("tree should be complete")
+	}
+
+	// Not complete binary tree
+	//
+	//     __1_
+	//    /    \
+	//   2      3
+	//  / \      \
+	// 4   5      6
+	//
+	root = binarytree.NewNode(1)
+	two = root.InsertLeft(2)
+	two.InsertLeft(4)
+	two.InsertRight(5)
+	three = root.InsertRight(3)
+	three.InsertRight(6)
+
+	if root.IsCompleteTree() {
+		t.Fatal("tree should not be complete")
+	}
+
+	// Not complete binary tree
+	//
+	//     1
+	//    /
+	//   2
+	//  /
+	// 3
+	//
+	root = binarytree.NewNode(1)
+	two = root.InsertLeft(2)
+	two.InsertLeft(3)
+
+	if root.IsCompleteTree() {
+		t.Fatal("tree should not be complete")
+	}
+
+	// Not complete binary tree
+	//
+	//   __1__
+	//  /     \
+	// 2       3
+	//  \     / \
+	//   4   5   6
+	root = binarytree.NewNode(1)
+	two = root.InsertLeft(2)
+	two.InsertRight(4)
+	three = root.InsertRight(3)
+	three.InsertLeft(5)
+	three.InsertRight(6)
+
+	if root.IsCompleteTree() {
+		t.Fatal("tree should not be complete")
+	}
+
+	// Not complete binary tree
+	//
+	//   1__
+	//  /   \
+	// 2     3
+	//      / \
+	//     4   5
+	root = binarytree.NewNode(1)
+	root.InsertLeft(2)
+	three = root.InsertRight(3)
+	three.InsertLeft(4)
+	three.InsertRight(5)
+
+	if root.IsCompleteTree() {
+		t.Fatal("tree should not be complete")
+	}
+
+	// A complete binary tree with a single root node
+	root = binarytree.NewNode(1)
+	if !root.IsCompleteTree() {
+		t.Fatal("tree should be complete")
+	}
+}
+
 func TestNodeAttributes(t *testing.T) {
 	root := binarytree.NewNode(1)
 
