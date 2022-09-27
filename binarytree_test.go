@@ -730,10 +730,10 @@ func TestNodeAttributes(t *testing.T) {
 	}
 
 	root.AddAttribute("color", "green")
-	root.AddAttribute("fillcolor", "green")
 
-	wantAttrs := "color=green fillcolor=green"
-	if root.GetDotAttributes() != wantAttrs {
+	wantAttrs := "color=green"
+	gotAttrs := root.GetDotAttributes()
+	if gotAttrs != wantAttrs {
 		t.Fatal("node attributes mismatch")
 	}
 }
