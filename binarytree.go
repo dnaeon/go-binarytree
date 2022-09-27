@@ -403,7 +403,7 @@ func (n *Node[T]) IsDegenerateTree() bool {
 // is such a tree, for which the height of the left and right
 // sub-trees of each node differ by no more than 1.
 func (n *Node[T]) IsBalancedTree() bool {
-	if n.Left == nil && n.Right == nil {
+	if n.IsLeafNode() {
 		return true
 	}
 
@@ -437,6 +437,48 @@ func (n *Node[T]) IsBalancedTree() bool {
 
 		if diff > 1 {
 			return false
+		}
+	}
+
+	return true
+}
+
+// IsCompleteTree returns true, if the tree is complete. A complete
+// binary tree is a binary tree in which every level, except possibly
+// the last, is completely filled, and all nodes in the last level are
+// as far left as possible.
+func (n *Node[T]) IsCompleteTree() bool {
+	if n.IsLeafNode() {
+		return true
+	}
+
+	nonFullNodeSeen := false
+	queue := deque.New[*Node[T]]()
+	queue.PushBack(n)
+
+	for !queue.IsEmpty() {
+		node, err := queue.PopFront()
+		if err != nil {
+			panic(err)
+
+		}
+
+		if node.Left != nil {
+			if nonFullNodeSeen {
+				return false
+			}
+			queue.PushBack(node.Left)
+		}
+
+		if !node.IsFullNode() {
+			nonFullNodeSeen = true
+		}
+
+		if node.Right != nil {
+			if nonFullNodeSeen {
+				return false
+			}
+			queue.PushBack(node.Right)
 		}
 	}
 
