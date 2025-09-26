@@ -25,8 +25,8 @@
 package deque
 
 import (
-        "errors"
-        "sync"
+	"errors"
+	"sync"
 )
 
 // ErrEmptyQueue is an error which is returned when attempting to pop
@@ -34,103 +34,103 @@ import (
 var ErrEmptyQueue = errors.New("Queue is empty")
 
 type Deque[T any] struct {
-        sync.RWMutex
-        items []T
+	sync.RWMutex
+	items []T
 }
 
 // New creates a new deque
 func New[T any]() *Deque[T] {
-        d := &Deque[T]{
-                items: make([]T, 0),
-        }
+	d := &Deque[T]{
+		items: make([]T, 0),
+	}
 
-        return d
+	return d
 }
 
 // PushBack inserts a new item at the back
 func (d *Deque[T]) PushBack(value T) {
-        d.Lock()
-        defer d.Unlock()
-        d.items = append(d.items, value)
+	d.Lock()
+	defer d.Unlock()
+	d.items = append(d.items, value)
 }
 
 // PushFront inserts a new item at the front
 func (d *Deque[T]) PushFront(value T) {
-        d.Lock()
-        defer d.Unlock()
-        d.items = append([]T{value}, d.items...)
+	d.Lock()
+	defer d.Unlock()
+	d.items = append([]T{value}, d.items...)
 }
 
 // IsEmpty returns true if the deque is empty, false otherwise
 func (d *Deque[T]) IsEmpty() bool {
-        d.RLock()
-        defer d.RUnlock()
-        return len(d.items) == 0
+	d.RLock()
+	defer d.RUnlock()
+	return len(d.items) == 0
 }
 
 // PopBack pops an item from the back
 func (d *Deque[T]) PopBack() (T, error) {
-        var empty T
-        if d.IsEmpty() {
-                return empty, ErrEmptyQueue
-        }
+	var empty T
+	if d.IsEmpty() {
+		return empty, ErrEmptyQueue
+	}
 
-        d.Lock()
-        defer d.Unlock()
+	d.Lock()
+	defer d.Unlock()
 
-        size := len(d.items)
-        item := d.items[size-1]
-        d.items = d.items[:size-1]
+	size := len(d.items)
+	item := d.items[size-1]
+	d.items = d.items[:size-1]
 
-        return item, nil
+	return item, nil
 }
 
 // PopFront pops an item from the front
 func (d *Deque[T]) PopFront() (T, error) {
-        var empty T
-        if d.IsEmpty() {
-                return empty, ErrEmptyQueue
-        }
+	var empty T
+	if d.IsEmpty() {
+		return empty, ErrEmptyQueue
+	}
 
-        d.Lock()
-        defer d.Unlock()
+	d.Lock()
+	defer d.Unlock()
 
-        item := d.items[0]
-        d.items = d.items[1:]
+	item := d.items[0]
+	d.items = d.items[1:]
 
-        return item, nil
+	return item, nil
 }
 
 // Length returns the size of the queue
 func (d *Deque[T]) Length() int {
-        d.RLock()
-        defer d.RUnlock()
-        return len(d.items)
+	d.RLock()
+	defer d.RUnlock()
+	return len(d.items)
 }
 
 // PeekFront peeks at the front
 func (d *Deque[T]) PeekFront() (T, error) {
-        var empty T
-        if d.IsEmpty() {
-                return empty, ErrEmptyQueue
-        }
+	var empty T
+	if d.IsEmpty() {
+		return empty, ErrEmptyQueue
+	}
 
-        d.RLock()
-        defer d.RUnlock()
+	d.RLock()
+	defer d.RUnlock()
 
-        return d.items[0], nil
+	return d.items[0], nil
 }
 
 // PeekBack peeks at the back
 func (d *Deque[T]) PeekBack() (T, error) {
-        var empty T
-        if d.IsEmpty() {
-                return empty, ErrEmptyQueue
-        }
+	var empty T
+	if d.IsEmpty() {
+		return empty, ErrEmptyQueue
+	}
 
-        d.RLock()
-        defer d.RUnlock()
+	d.RLock()
+	defer d.RUnlock()
 
-        size := len(d.items)
-        return d.items[size-1], nil
+	size := len(d.items)
+	return d.items[size-1], nil
 }
