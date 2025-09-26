@@ -33,6 +33,7 @@ import (
 // an item from an empty queue
 var ErrEmptyQueue = errors.New("Queue is empty")
 
+// Deque represents a double-ended queue.
 type Deque[T any] struct {
 	sync.RWMutex
 	items []T
@@ -51,6 +52,12 @@ func New[T any]() *Deque[T] {
 func (d *Deque[T]) PushBack(value T) {
 	d.Lock()
 	defer d.Unlock()
+	d.pushBack(value)
+}
+
+// pushBack inserts a new item at the back. Callers should ensure that access to
+// the deque is synchronized when using this method.
+func (d *Deque[T]) pushBack(value T) {
 	d.items = append(d.items, value)
 }
 
@@ -58,6 +65,12 @@ func (d *Deque[T]) PushBack(value T) {
 func (d *Deque[T]) PushFront(value T) {
 	d.Lock()
 	defer d.Unlock()
+	d.pushFront(value)
+}
+
+// pushFront inserts a new item at the front. Callers should ensure that
+// access to the deque is synchronized when using this method.
+func (d *Deque[T]) pushFront(value T) {
 	d.items = append([]T{value}, d.items...)
 }
 
@@ -65,18 +78,29 @@ func (d *Deque[T]) PushFront(value T) {
 func (d *Deque[T]) IsEmpty() bool {
 	d.RLock()
 	defer d.RUnlock()
+	return d.isEmpty()
+}
+
+// isEmpty returns true if the deque is empty, false otherwise. Callers should
+// ensure that access to the deque is synchronized when using this method.
+func (d *Deque[T]) isEmpty() bool {
 	return len(d.items) == 0
 }
 
 // PopBack pops an item from the back
 func (d *Deque[T]) PopBack() (T, error) {
-	var empty T
-	if d.IsEmpty() {
-		return empty, ErrEmptyQueue
-	}
-
 	d.Lock()
 	defer d.Unlock()
+	return d.popBack()
+}
+
+// popBack pops an item from the back of the deque. Callers should ensure that
+// access to the deque is synchronized when using this method.
+func (d *Deque[T]) popBack() (T, error) {
+	var empty T
+	if d.isEmpty() {
+		return empty, ErrEmptyQueue
+	}
 
 	size := len(d.items)
 	item := d.items[size-1]
@@ -87,13 +111,18 @@ func (d *Deque[T]) PopBack() (T, error) {
 
 // PopFront pops an item from the front
 func (d *Deque[T]) PopFront() (T, error) {
-	var empty T
-	if d.IsEmpty() {
-		return empty, ErrEmptyQueue
-	}
-
 	d.Lock()
 	defer d.Unlock()
+	return d.popFront()
+}
+
+// popFront pops an item from the front of the deque. Callers should ensure that
+// access to the deque is synchronized when using this method.
+func (d *Deque[T]) popFront() (T, error) {
+	var empty T
+	if d.isEmpty() {
+		return empty, ErrEmptyQueue
+	}
 
 	item := d.items[0]
 	d.items = d.items[1:]
@@ -133,4 +162,39 @@ func (d *Deque[T]) PeekBack() (T, error) {
 
 	size := len(d.items)
 	return d.items[size-1], nil
+}
+
+// Rotate rotates the elements in the deque with n positions. When n is negative
+// the deque will be rotated to the left, and when n is positive it will be
+// rotated to the right.
+func (d *Deque[T]) Rotate(n int) error {
+	if d.IsEmpty() {
+		return nil
+	}
+
+	d.Lock()
+	defer d.Unlock()
+	var pushFunc func(val T)
+	var popFunc func() (T, error)
+	switch {
+	case n > 0:
+		popFunc = d.popBack
+		pushFunc = d.pushFront
+	case n < 0:
+		popFunc = d.popFront
+		pushFunc = d.pushBack
+		n = -n
+	default:
+		return nil
+	}
+
+	for range n {
+		val, err := popFunc()
+		if err != nil {
+			return err
+		}
+		pushFunc(val)
+	}
+
+	return nil
 }
