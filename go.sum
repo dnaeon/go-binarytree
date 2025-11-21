@@ -1,2 +1,2 @@
-gopkg.in/dnaeon/go-deque.v1 v1.0.0-20250926082955-0627070af3b0 h1:0lGmV/TJSnt0GTSoFcvWooB2bSbf3HDvMV3DRQEy9k4=
-gopkg.in/dnaeon/go-deque.v1 v1.0.0-20250926082955-0627070af3b0/go.mod h1:mAZ2p0oPgDAeRlUKq3IJOE9RvqVvA3BIA4WKxG/9zDM=
+gopkg.in/dnaeon/go-deque.v1 v1.0.0-20251121085639-531ddbf8ba89 h1:f57Zx1Z3ra8DIWshzggo869Hx1cpIhCxMyLAsN9+OfQ=
+gopkg.in/dnaeon/go-deque.v1 v1.0.0-20251121085639-531ddbf8ba89/go.mod h1:mAZ2p0oPgDAeRlUKq3IJOE9RvqVvA3BIA4WKxG/9zDM=
